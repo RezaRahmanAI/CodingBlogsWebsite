@@ -1,6 +1,7 @@
 ﻿using CodingBlogs.API.Data;
 using CodingBlogs.API.Models.Domain;
 using CodingBlogs.API.Models.DTOs;
+using CodingBlogs.API.Repositories.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,11 +11,11 @@ namespace CodingBlogs.API.Controllers
     [ApiController]
     public class CategoriesController : ControllerBase
     {
-        private readonly ApplicationDbContext dbContext;
+        private readonly ICategoryRepository _category;
 
-        public CategoriesController(ApplicationDbContext dbContext)
+        public CategoriesController(ICategoryRepository category)
         {
-            this.dbContext = dbContext;
+            this._category = category;
         }
 
 
@@ -29,8 +30,7 @@ namespace CodingBlogs.API.Controllers
             };
 
 
-            await dbContext.Categories.AddAsync(category);
-            await dbContext.SaveChangesAsync();
+            await _category.CreateCategoryAsync(category);
 
 
             // Map Domain Model to DTO
